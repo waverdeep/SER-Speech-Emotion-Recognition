@@ -10,7 +10,7 @@ def get_all_file_path(input_dir, file_extension):
     return glob.glob(os.path.join(input_dir, '**', '*.{}'.format(file_extension)), recursive=True)
 
 
-def preprocess(data, input_dir, dest_dir, target_sr=16000, speed=1):
+def preprocess(data, dest_dir, target_sr=16000, speed=1):
     output_file_path = os.path.join(dest_dir, '/'.join(data.split('/')[2:-1]))
     os.makedirs(output_file_path, exist_ok=True)
     if not os.path.exists(output_file_path) or True:
@@ -23,7 +23,8 @@ def convert_wav_env_parallel_preprocess(input_dir, dest_dir, target_sr=16000, sp
     dataset = get_all_file_path(input_dir, 'wav')
     with multiprocessing.Pool(parallel) as p:
         func = functools.partial(preprocess,
-                                 input_dir=input_dir, dest_dir=dest_dir,
-                                 target_sr=target_sr, speed=speed)
+                                 dest_dir=dest_dir,
+                                 target_sr=target_sr,
+                                 speed=speed)
         output = list(tqdm(p.imap(func, dataset), total=len(dataset)))
-        return output
+        return dest_dir
