@@ -12,4 +12,3 @@ dest_dir = convert_wav_env.convert_wav_env_parallel_preprocess(input_dir='./data
 # 2. split train, test dataset
 train_dataset, test_dataset = data_split_functions.split_train_test_file_list(root_dir=dest_dir,
                                                                               file_extension='wav')
-print('{} : {}'.format(train_dataset[0], test_dataset[0]))
