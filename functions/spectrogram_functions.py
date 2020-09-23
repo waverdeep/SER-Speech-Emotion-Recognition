@@ -32,6 +32,8 @@ def log_spectrogram(audio, sample_rate, window_size=20, step_size=10, eps=1e-10)
 def scipy_log_spectrogram(filepath, sr=16000, res_type='kaiser_fast', duration=2.8):
     samples, sample_rate = load_wav_librosa(filepath, sr=sr, res_type=res_type, duration=duration)
     freqs, times, spec = log_spectrogram(samples, sample_rate)
+    spec = np.expand_dims(spec, axis=0)
+    print(spec.shape)
     return freqs, times, spec
 
 
