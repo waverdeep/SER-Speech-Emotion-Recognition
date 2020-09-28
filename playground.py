@@ -6,7 +6,6 @@ from torch.utils.data import DataLoader
 from models.model import Vanilla_CNN
 from functions import optimizers
 from functions import losses
-import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -30,25 +29,30 @@ def load_dataset(root_dir, file_extension='wav', batch_size=32):
 
 
 def train(epoch, network, dataloader, device, loss_func, optimizer_func):
-    print('Epoch : {}'.format(epoch))
     network.train()
-    running_loss = 0.0
+    for e in range(epoch):
+        running_loss = 0.0
+        running_corrects = 0
 
-    for batch_idx, (inputs, targets) in enumerate(dataloader):
-        inputs = torch.FloatTensor(inputs)
-        inputs = inputs.to(device)
-        targets = targets.to(device)
-        optimizer_func.zero_grad()
-        outputs = network(inputs)
-        loss = loss_func(outputs, targets)
-        loss.backward()
-        optimizer_func.step()
+        for batch_idx, (inputs, targets) in enumerate(dataloader):
+            inputs = torch.FloatTensor(inputs)
+            inputs = inputs.to(device)
+            targets = targets.to(device)
+            optimizer_func.zero_grad()
+            outputs = network(inputs)
+            _, preds = torch.max(outputs, 1)
+            loss = loss_func(outputs, targets)
+            loss.backward()
+            optimizer_func.step()
 
-        running_loss += loss.item()
-        if batch_idx % 2000 == 1999:  # print every 2000 mini-batches
-            print('[%d, %5d] loss: %.3f' %
-                  (epoch + 1, batch_idx + 1, running_loss / 2000))
-            running_loss = 0.0
+            running_loss += loss.item()
+            running_corrects += torch.sum(preds == targets.data)
+            if batch_idx % 20 == 19:  # print every 2000 mini-batches
+                print('[%d, %5d] loss: %.3f' %
+                      (epoch + 1, batch_idx + 1, running_loss / 2000))
+                running_loss = 0.0
+        epoch_acc = running_corrects.double() / len(dataloader.dataset)
+        print("{}epoch : acc : {}".format(e, epoch_acc))
 
     print('Finish Training...')
 
@@ -60,6 +64,7 @@ def test(network, dataloader, device, loss_func):
 
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(dataloader):
+            inputs = torch.FloatTensor(inputs)
             inputs, targets = inputs.to(device), targets.to(device)
 
             outputs = network(inputs)
@@ -80,9 +85,8 @@ def test(network, dataloader, device, loss_func):
 def main():
     root_dir = './dataset_resample'
     file_extension = 'wav'
-    batch_size = 32
-    epoch = 100
-
+    batch_size = 128
+    epoch = 40
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -97,7 +101,7 @@ def main():
     optimizer = optimizers.choose_optimizer('SGD', network, lr=0.001, momentum=0.9, weight_decay=0.1)
 
     train(epoch, network, train_dataloader, device, loss_func=loss, optimizer_func=optimizer)
-
+    test(network, dataloader=test_dataloader, device=device, loss_func=loss)
 
 main()
 
