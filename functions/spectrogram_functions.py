@@ -12,9 +12,23 @@ import matplotlib.pyplot as plt
 import scipy.io
 
 
-def load_wav_librosa(filepath, sr=16000, res_type='kaiser_fast', duration=2.8):
+def load_wav_librosa_with_duration(filepath, sr=16000, res_type='kaiser_fast', duration=2.8):
     samples, sample_rate = librosa.load(filepath, sr=sr, res_type=res_type, duration=duration)
     return samples, sample_rate
+
+
+def load_wav_librosa(filepath, sr=16000, res_type='kaiser_fast'):
+    samples, sample_rate = librosa.load(filepath, sr=sr, res_type=res_type)
+    return samples, sample_rate
+
+
+def trim_silence(samples, top_db=25):
+    signals, index = librosa.effects.trim(samples, top_db=top_db)
+    return signals, index
+
+
+def noise_reduction(signals):
+    return scipy.signal.wiener(signals)
 
 
 def log_spectrogram(audio, sample_rate, window_size=20, step_size=10, eps=1e-10):
@@ -48,9 +62,14 @@ def scipy_log_spectrogram_plot(freqs, times, spectrogram):
     plt.xlabel('Seconds')
 
 
+def mel_spectrogram(signals, sr=16000, n_mels=128, n_fft=2048, hop_length=512):
+    melspec = librosa.feature.melspectrogram(signals, sr=sr, n_mels=n_mels, n_fft=n_fft, hop_length=hop_length)
+    logspec = librosa.amplitude_to_db(melspec)
+    return logspec
+
+
 def mel_power_spectrogram(filepath, sr=16000, res_type='kaiser_fast', duration=2.8):
     samples, sample_rate = load_wav_librosa(filepath, sr=sr, res_type=res_type, duration=duration)
-    freqs, times, spectrogram = log_spectrogram(samples, sample_rate)
     # Plotting Mel Power Spectrogram
     S = librosa.feature.melspectrogram(samples, sr=sample_rate, n_mels=128)
     # Convert to log scale (dB). We'll use the peak power (max) as reference.

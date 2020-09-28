@@ -58,14 +58,15 @@ def test(network, dataloader, device, loss_func):
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs = network(inputs)
-            loss = loss_func(outputs, targets)
 
-            test_loss += loss.item()
-
-            _, predicted = torch.max(outputs.data, 1)
-            total += targets.size(0)
-            correct += (predicted == targets).sum().item()
+            # outputs = network(inputs)
+            # loss = loss_func(outputs, targets)
+            #
+            # test_loss += loss.item()
+            #
+            # _, predicted = torch.max(outputs.data, 1)
+            # total += targets.size(0)
+            # correct += (predicted == targets).sum().item()
 
         print('Accuracy of the network by test images: %d %%' % (
                 100 * correct / total))
