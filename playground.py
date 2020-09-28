@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from models.model import Vanilla_CNN
 from functions import optimizers
 from functions import losses
+import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -34,7 +35,9 @@ def train(epoch, network, dataloader, device, loss_func, optimizer_func):
     running_loss = 0.0
 
     for batch_idx, (inputs, targets) in enumerate(dataloader):
-        inputs, targets = inputs.to(device), targets.to(device)
+        inputs = torch.FloatTensor(inputs)
+        inputs = inputs.to(device)
+        targets = targets.to(device)
         optimizer_func.zero_grad()
         outputs = network(inputs)
         loss = loss_func(outputs, targets)
@@ -59,14 +62,14 @@ def test(network, dataloader, device, loss_func):
         for batch_idx, (inputs, targets) in enumerate(dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
 
-            # outputs = network(inputs)
-            # loss = loss_func(outputs, targets)
-            #
-            # test_loss += loss.item()
-            #
-            # _, predicted = torch.max(outputs.data, 1)
-            # total += targets.size(0)
-            # correct += (predicted == targets).sum().item()
+            outputs = network(inputs)
+            loss = loss_func(outputs, targets)
+
+            test_loss += loss.item()
+
+            _, predicted = torch.max(outputs.data, 1)
+            total += targets.size(0)
+            correct += (predicted == targets).sum().item()
 
         print('Accuracy of the network by test images: %d %%' % (
                 100 * correct / total))
