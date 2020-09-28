@@ -58,6 +58,7 @@ def test(network, dataloader, device, loss_func):
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(dataloader):
             inputs, targets = inputs.to(device), targets.to(device)
+
             # outputs = network(inputs)
             # loss = loss_func(outputs, targets)
             #
