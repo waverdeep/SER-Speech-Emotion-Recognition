@@ -1,13 +1,21 @@
 import torch
+import torchvision
+
 import load_dataset.data_split_functions as data_split_functions
 import multiprocessing
 import load_dataset.AudioDataset as AudioDataset
 from torch.utils.data import DataLoader
+
+from functions.spectrogram_functions import mel_power_spectrogram_plot
 from models.model import Vanilla_CNN
 from functions import optimizers
 from functions import losses
+import matplotlib.pyplot as plt
+from torch.utils.tensorboard import SummaryWriter
+
 import warnings
 warnings.filterwarnings('ignore')
+
 
 def load_dataset(root_dir, file_extension='wav', batch_size=32):
 
@@ -81,6 +89,19 @@ def test(network, dataloader, device, loss_func):
         print('loss : %d' % test_loss)
 
 
+def create_tensorboard(log_dir):
+    # 기본 `log_dir` 은 "runs"이며, 여기서는 더 구체적으로 지정하였습니다
+    writer = SummaryWriter(log_dir) #'runs/fashion_mnist_experiment_1'
+    return writer
+
+
+def draw_model_tensorboard(writer,device, network, train_dataloader):
+    dataiter = iter(train_dataloader)
+    inputs, targets = dataiter.next()
+    inputs = torch.FloatTensor(inputs)
+    inputs, targets = inputs.to(device), targets.to(device)
+    writer.add_graph(network, inputs)
+    writer.close()
 
 def main():
     root_dir = './dataset_resample'
@@ -99,6 +120,9 @@ def main():
 
     loss = losses.choose_loss('CrossEntropyLoss')
     optimizer = optimizers.choose_optimizer('SGD', network, lr=0.001, momentum=0.9, weight_decay=0.1)
+
+    writer = create_tensorboard('runs/speech_emotion_experiment_1')
+    draw_model_tensorboard(writer, device=device, network=network, train_dataloader=train_dataloader)
 
     train(epoch, network, train_dataloader, device, loss_func=loss, optimizer_func=optimizer)
     test(network, dataloader=test_dataloader, device=device, loss_func=loss)
