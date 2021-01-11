@@ -1,4 +1,4 @@
-import preprocessing.convert_wav_env as convert_wav_env
+import old.preprocessing.convert_wav_env as convert_wav_env
 import multiprocessing
 
 # 1. start re-sample audio dataset

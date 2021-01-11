@@ -1,11 +1,10 @@
 import torch
-import load_dataset.data_split_functions as data_split_functions
+import old.load_dataset.data_split_functions as data_split_functions
 import multiprocessing
-import load_dataset.AudioDataset as AudioDataset
+import old.load_dataset.AudioDataset as AudioDataset
 from torch.utils.data import DataLoader
-from models.model import Vanilla_CNN
-from functions import optimizers
-from functions import losses
+from old.models.model import Vanilla_CNN
+from old.functions import optimizers, losses
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -83,7 +82,7 @@ def test(network, dataloader, device, loss_func):
 
 
 def main():
-    root_dir = './dataset_resample'
+    root_dir = '../dataset_resample'
     file_extension = 'wav'
     batch_size = 128
     epoch = 40

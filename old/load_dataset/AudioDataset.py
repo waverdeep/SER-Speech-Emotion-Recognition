@@ -1,8 +1,6 @@
-import torch
 import torch.utils
-import pandas as pd
-import functions.file_functions as file_functions
-import functions.spectrogram_functions as spectrogram_functions
+import old.functions.file_functions as file_functions
+import old.functions.spectrogram_functions as spectrogram_functions
 import numpy as np
 
 
