@@ -29,6 +29,8 @@ def resampling(source, orig_freq=16000, new_freq=16000):
     return resample(source)
 
 def find_short_data(source, sample_rate, duration):
+    if duration is None:
+        return True
     length = sample_rate*duration
     if len(source[0]) < length:
         return False
@@ -42,7 +44,7 @@ def extract_vad(source, sample_rate):
     source = torch.flip(source, [0, 1])
     return vad(source)
 
-def preprocess(input_filepath, output_dir, duration=2.5):
+def preprocess(input_filepath, output_dir, duration=None):
     if not os.path.isdir(output_dir):
         create_directory(output_dir)
     source, sr = torchaudio.load(input_filepath)
@@ -55,7 +57,7 @@ def preprocess(input_filepath, output_dir, duration=2.5):
         return False
     return True
 
-def parallel_preprocess(input_dir, output_dir, duration=2.5, parallel=None):
+def parallel_preprocess(input_dir, output_dir, duration=None, parallel=None):
     file_list = get_all_file_path(input_dir, 'wav')
     with multiprocessing.Pool(parallel) as p:
         func = functools.partial(preprocess,
