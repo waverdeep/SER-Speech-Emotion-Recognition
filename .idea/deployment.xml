@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="2020-2RD01" filePermissions="511" folderPermissions="511" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="On explicit save action" filePermissions="511" folderPermissions="511" autoUploadExternalChanges="true">
     <serverData>
-      <paths name="2020-2RD01">
+      <paths name="root@ubinetlab.asuscomm.com:11001 password">
         <serverdata>
           <mappings>
-            <mapping deploy="/data/SpeechEmothion-workspace/Task1" local="$PROJECT_DIR$" />
+            <mapping deploy="/data/SER-Speech-Emotion-Recognition" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
     </serverData>
-    <option name="myAutoUpload" value="ALWAYS" />
+    <option name="myAutoUpload" value="ON_EXPLICIT_SAVE" />
   </component>
 </project>
