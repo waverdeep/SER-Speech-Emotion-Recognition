@@ -23,3 +23,9 @@ def extract_mel_spectrogram(source, sample_rate, n_mels=80, n_fft=None, window_s
         torchaudio.transforms.AmplitudeToDB()
     )
     return mel_spectrogram(source[0])
+
+def extract_mfcc(source, sample_rate, n_mfcc, log_mels=True, melkargs=None):
+    mfcc = torchaudio.transforms.MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc, log_mels=log_mels, melkwargs=melkargs)
+    return mfcc(source[0])
+
+
