@@ -10,3 +10,6 @@
 - Librosa : 0.7.1
 - numba : 0.48.0
 - torch
+
+## Conditions
+- 모든 음원은 고정길이를 가지고 있음
