@@ -25,3 +25,13 @@ torchaudio 라이브러리를 사용해서 음원의 spectrogram을 추출
 - window_stride : 0.01
 ##### return type
 - Dimension (…, freq, time)
+#### extract_mel_spectrogram
+torchaudio 라이브러리를 사용해서 음원의 mel spectrogram을 추출
+- source
+- sample_rate
+- n_mels : 80
+- n_fft : None (win_length와 동일)
+- window_size : 0.025
+- window_stride : 0.01
+##### return type
+- Dimension (…, freq, time)
