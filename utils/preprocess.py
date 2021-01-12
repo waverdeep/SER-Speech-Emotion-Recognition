@@ -69,7 +69,7 @@ def parallel_preprocess(input_dir, output_dir, duration=None, parallel=None):
 def main():
     output = parallel_preprocess('../dataset/Audio_Speech_Actors_01-24/',
                                  '../dataset/speech_processed/',
-                                 duration=2.5,
+                                 duration=None,
                                  parallel=multiprocessing.cpu_count())
 
 if __name__ == '__main__':
