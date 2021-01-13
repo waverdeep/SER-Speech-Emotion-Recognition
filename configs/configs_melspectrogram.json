@@ -1,6 +1,7 @@
 {
   "feature_config": {
     "spectrogram_type": "melspectrogram",
+    "audio_duration": 2.5,
     "n_mels": 80,
     "n_fft": null,
     "window_size": 0.025,
