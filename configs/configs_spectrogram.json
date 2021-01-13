@@ -1,4 +1,6 @@
 {
+  "input_dir": "./dataset/speech_processed/",
+  "input_file_extension": "wav",
   "feature_config": {
     "spectrogram_type": "spectrogram",
     "audio_duration": 2.5,
