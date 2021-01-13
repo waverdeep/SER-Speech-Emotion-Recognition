@@ -5,6 +5,7 @@ import os
 import multiprocessing
 import functools
 from tqdm import tqdm
+import numpy as np
 
 def get_all_file_path(input_dir, file_extension):
     temp = glob.glob(os.path.join(input_dir, '**', '*.{}'.format(file_extension)), recursive=True)
@@ -55,7 +56,7 @@ def preprocess(input_filepath, output_dir, duration=None):
                         sample_rate=sr)
     else:
         return False
-    return True
+    return len(source[0])/sr
 
 def parallel_preprocess(input_dir, output_dir, duration=None, parallel=None):
     file_list = get_all_file_path(input_dir, 'wav')
@@ -66,11 +67,17 @@ def parallel_preprocess(input_dir, output_dir, duration=None, parallel=None):
         output = list(tqdm(p.imap(func, file_list), total=len(file_list)))
         return output
 
+
+
 def main():
     output = parallel_preprocess('../dataset/Audio_Speech_Actors_01-24/',
                                  '../dataset/speech_processed/',
                                  duration=None,
                                  parallel=multiprocessing.cpu_count())
+    output = np.array(output)
+    print('average : {}'.format(np.mean(output)))
+    print('min : {}'.format(np.min(output)))
+    print("max : {}".format(np.max(output)))
 
 if __name__ == '__main__':
     main()
