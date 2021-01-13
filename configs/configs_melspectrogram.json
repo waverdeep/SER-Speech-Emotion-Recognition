@@ -1,0 +1,10 @@
+{
+  "feature_config": {
+    "spectrogram_type": "melspectrogram",
+    "n_mels": 80,
+    "n_fft": null,
+    "window_size": 0.025,
+    "window_stride": 0.01,
+    "sample_rate": 44100
+  }
+}
