@@ -5,6 +5,8 @@ import dataset
 from dataset import AudioDatasetType01
 import argparse
 import json
+import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
 
 def get_args():
     parser = argparse.ArgumentParser(description='Speech Emotion Recognition')
@@ -24,6 +26,16 @@ def read_input_config(input_filepath):
         json_data = json.load(f)
     return json_data
 
+def visualize_dataset(input_dataset, count=10):
+    for i in range(len(input_dataset)):
+        x, y = input_dataset[i]
+        print(i, x.shape, y)
+        plt.pcolor(x)
+        plt.show()
+
+        if i == count:
+            break
+
 def main(args):
     configs = read_input_config(args.input_config)
     is_cuda = cuda_check()
@@ -38,6 +50,22 @@ def main(args):
     print('test_list : {}'.format(len(test_file_list)))
 
     # data load
+    train_dataset = AudioDatasetType01(input_file_list=train_file_list,
+                                       feature_config=configs['feature_config'])
+    valid_dataset = AudioDatasetType01(input_file_list=valid_file_list,
+                                       feature_config=configs['feature_config'])
+    test_dataset = AudioDatasetType01(input_file_list=test_file_list,
+                                       feature_config=configs['feature_config'])
+
+    train_data_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
+    valid_data_loader = DataLoader(valid_dataset, batch_size=32, shuffle=True, num_workers=4)
+    test_data_loader = DataLoader(test_dataset, batch_size=32, shuffle=True, num_workers=4)
+
+    # model
+
+    # optimizer
+
+
 
 
 
