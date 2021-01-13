@@ -82,10 +82,14 @@ class AudioDatasetType01(Dataset):
     def __len__(self):
         return len(self.file_list)
 
+# simple hold out validation
 def unweighted_split_train_test_file_list(input_dir, file_extension='wav', test_size=0.2, random_state=42):
     file_list = get_all_file_path(input_dir, file_extension)
     train_dataset, test_dataset = train_test_split(file_list, test_size=test_size, random_state=random_state)
-    return train_dataset, test_dataset
+    valid_dataset = test_dataset[:int(round(len(test_dataset)/2))]
+    test_dataset = test_dataset[int(round(len(test_dataset)/2)):]
+    return train_dataset, valid_dataset, test_dataset
 
+# simple hold out validation
 def weighted_split_train_test_file_list(input_dir, file_extension='wav', test_size=0.2, random_state=42):
     pass
