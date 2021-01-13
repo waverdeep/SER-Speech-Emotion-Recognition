@@ -1,0 +1,9 @@
+{
+  "feature_config": {
+    "spectrogram_type": "spectrogram",
+    "n_fft": null,
+    "window_size": 0.025,
+    "window_stride": 0.01,
+    "sample_rate": 44100
+  }
+}
