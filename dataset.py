@@ -5,6 +5,7 @@ import utils.features as features
 import torchaudio
 import torch
 import torch.nn as nn
+from sklearn.model_selection import train_test_split
 
 
 def get_all_file_path(input_dir, file_extension='wav'):
@@ -80,3 +81,11 @@ class AudioDatasetType01(Dataset):
 
     def __len__(self):
         return len(self.file_list)
+
+def unweighted_split_train_test_file_list(input_dir, file_extension='wav', test_size=0.2, random_state=42):
+    file_list = get_all_file_path(input_dir, file_extension)
+    train_dataset, test_dataset = train_test_split(file_list, test_size=test_size, random_state=random_state)
+    return train_dataset, test_dataset
+
+def weighted_split_train_test_file_list(input_dir, file_extension='wav', test_size=0.2, random_state=42):
+    pass
