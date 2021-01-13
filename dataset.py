@@ -3,6 +3,8 @@ import glob
 import os
 import utils.features as features
 import torchaudio
+import torch
+import torch.nn as nn
 
 
 def get_all_file_path(input_dir, file_extension='wav'):
@@ -32,6 +34,19 @@ def get_ravdess_property(input_filepath):
     return {'Modality': idea[0], 'VocalChannel': idea[1], 'Emotion': idea[2], 'EmotionalIntensity': idea[3],
             'Statement': idea[4], 'Repetition': idea[5], 'Actor': idea[6]}
 
+def manipulate_audio_duration(source, sr, audio_duration):
+    audio_length = len(source[0])
+    input_length = audio_duration * sr
+    if audio_length > input_length: # cut out
+        mani_source = source[0, :input_length]
+        mani_source = torch.reshape(mani_source, (1, input_length))
+    elif audio_length < input_length: # padd
+        mani_source = nn.ConstantPad1d((0, input_length - audio_length), 0)(source)
+    else:
+        mani_source = source
+
+    return mani_source, sr
+
 class AudioDatasetType01(Dataset):
     def __init__(self, input_filepath, feature_config):
         self.input_filepath = input_filepath
@@ -41,13 +56,16 @@ class AudioDatasetType01(Dataset):
     def __getitem__(self, index):
         filepath = self.file_list[index]
         source, sr = torchaudio.load(filepath)
-        if self.feature_config['spectrogram_type'] == 'spectrogram':
+        if self.feature_config['audio_duration'] is not None:
+            source, sr = manipulate_audio_duration(source, sr, self.feature_config['audio_duration'])
+
+        if self.feature_config['spectrogram_type'] is 'spectrogram':
             waveform = features.extract_spectrogram(source=source,
                                                     sample_rate=sr,
                                                     n_fft=self.feature_config['n_fft'],
                                                     window_size=self.feature_config['window_size'],
                                                     window_stride=self.feature_config['window_stride'])
-        elif self.feature_config['spectrogram_type'] == 'melspectrogram':
+        elif self.feature_config['spectrogram_type'] is 'melspectrogram':
             waveform = features.extract_mel_spectrogram(source=source,
                                                         sample_rate=sr,
                                                         n_mels=self.feature_config['n_mels'],
